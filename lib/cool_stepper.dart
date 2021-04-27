@@ -7,6 +7,7 @@ import 'package:cool_stepper/src/models/cool_step.dart';
 import 'package:cool_stepper/src/models/cool_stepper_config.dart';
 import 'package:cool_stepper/src/widgets/cool_stepper_view.dart';
 import 'package:flutter/material.dart';
+import 'package:recruitify/theme/theme.dart';
 
 /// CoolStepper
 class CoolStepper extends StatefulWidget {
@@ -36,7 +37,9 @@ class CoolStepper extends StatefulWidget {
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 20.0),
     this.config = const CoolStepperConfig(
       backText: "PREV",
+      backBtnColor: Colors.grey,
       nextText: "NEXT",
+      nextBtnColor: Colors.blueAccent,
       stepText: "STEP",
       ofText: "OF",
       finalText: "FINISH",
@@ -161,24 +164,34 @@ class _CoolStepperState extends State<CoolStepper> {
       return backLabel;
     }
 
-    final buttons = Container(
+    final buttons = _isLast(currentStep) ? Container() : Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          FlatButton(
-            onPressed: onStepBack,
-            child: Text(
-              getPrevLabel(),
-              style: TextStyle(color: Colors.grey),
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: FlatButton(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              color: _isFirst(currentStep) ? null : (widget.config.backBtnColor ?? Colors.grey),
+              onPressed: onStepBack,
+              child: Text(
+                getPrevLabel(),
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ),
           counter,
-          FlatButton(
-            onPressed: onStepNext,
-            child: Text(
-              getNextLabel(),
-              style: TextStyle(
-                color: Colors.green,
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: FlatButton(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              color:  (widget.config.backBtnColor ?? Colors.blueAccent),
+              onPressed: onStepNext,
+              child: Text(
+                getNextLabel(),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
