@@ -185,7 +185,7 @@ class _CoolStepperState extends State<CoolStepper> {
             padding: const EdgeInsets.only(right: 20),
             child: FlatButton(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-              color:  (widget.config.backBtnColor ?? Colors.blueAccent),
+              color:  (widget.config.nextBtnColor ?? Colors.blueAccent),
               onPressed: onStepNext,
               child: Text(
                 getNextLabel(),
