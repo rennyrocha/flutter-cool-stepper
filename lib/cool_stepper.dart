@@ -164,7 +164,7 @@ class _CoolStepperState extends State<CoolStepper> {
       return backLabel;
     }
 
-    final buttons = _isLast(currentStep) ? Container() : Container(
+    final buttons = Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -180,7 +180,8 @@ class _CoolStepperState extends State<CoolStepper> {
               ),
             ),
           ),
-          counter,
+          _isLast(currentStep) ? Container() : counter,
+          _isLast(currentStep) ? Container() :
           Padding(
             padding: const EdgeInsets.only(right: 20),
             child: FlatButton(
