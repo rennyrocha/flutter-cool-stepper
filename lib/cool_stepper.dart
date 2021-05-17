@@ -168,7 +168,7 @@ class _CoolStepperState extends State<CoolStepper> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Padding(
+          getPrevLabel() == "" ? Container() : Padding(
             padding: const EdgeInsets.only(left: 20),
             child: FlatButton(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
