@@ -45,6 +45,7 @@ class CoolStepper extends StatefulWidget {
       finalText: "FINISH",
       backTextList: null,
       nextTextList: null,
+      showHeader: true
     ),
     this.showErrorSnackbar = false,
   }) : super(key: key);
