@@ -19,7 +19,7 @@ class CoolStepperView extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final title = Container(
+    final title = config.showHeader ? Container(
       width: double.infinity,
       margin: EdgeInsets.only(bottom: 20.0),
       padding: EdgeInsets.all(20.0),
@@ -70,7 +70,7 @@ class CoolStepperView extends StatelessWidget {
           )
         ],
       ),
-    );
+    ) : Container();
 
     final content = Expanded(
       child: SingleChildScrollView(

@@ -127,7 +127,7 @@ class _CoolStepperState extends State<CoolStepper> {
       ),
     );
 
-    final counter = Container(
+    final counter = widget.config.stepText == "" && widget.config.ofText == "" ? Container() : Container(
       child: Text(
         "${widget.config.stepText ?? 'STEP'} ${currentStep + 1} ${widget.config.ofText ?? 'OF'} ${widget.steps.length}",
         style: TextStyle(

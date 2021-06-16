@@ -55,6 +55,8 @@ class CoolStepperConfig {
   /// default is 'FINISH'
   final String finalText;
 
+  final bool showHeader;
+
   const CoolStepperConfig({
     this.backText,
     this.backBtnColor,
@@ -70,5 +72,6 @@ class CoolStepperConfig {
     this.backTextList,
     this.nextTextList,
     this.finalText,
+    this.showHeader,
   });
 }
