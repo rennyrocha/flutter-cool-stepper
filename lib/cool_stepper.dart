@@ -3,11 +3,12 @@ library cool_stepper;
 export 'package:cool_stepper/src/models/cool_step.dart';
 export 'package:cool_stepper/src/models/cool_stepper_config.dart';
 
+import 'package:another_flushbar/flushbar.dart';
+
 import 'package:cool_stepper/src/models/cool_step.dart';
 import 'package:cool_stepper/src/models/cool_stepper_config.dart';
 import 'package:cool_stepper/src/widgets/cool_stepper_view.dart';
 import 'package:flutter/material.dart';
-import 'package:recruitify/theme/theme.dart';
 
 /// CoolStepper
 class CoolStepper extends StatefulWidget {
@@ -31,22 +32,11 @@ class CoolStepper extends StatefulWidget {
   final bool showErrorSnackbar;
 
   const CoolStepper({
-    Key key,
-    @required this.steps,
-    @required this.onCompleted,
+    Key? key,
+    required this.steps,
+    required this.onCompleted,
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 20.0),
-    this.config = const CoolStepperConfig(
-      backText: "PREV",
-      backBtnColor: Colors.grey,
-      nextText: "NEXT",
-      nextBtnColor: Colors.blueAccent,
-      stepText: "STEP",
-      ofText: "OF",
-      finalText: "FINISH",
-      backTextList: null,
-      nextTextList: null,
-      showHeader: true
-    ),
+    this.config = const CoolStepperConfig(),
     this.showErrorSnackbar = false,
   }) : super(key: key);
 
@@ -55,19 +45,19 @@ class CoolStepper extends StatefulWidget {
 }
 
 class _CoolStepperState extends State<CoolStepper> {
-  PageController _controller = PageController();
+  PageController? _controller = PageController();
 
   int currentStep = 0;
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller!.dispose();
     _controller = null;
     super.dispose();
   }
 
-  switchToPage(int page) {
-    _controller.animateToPage(
+  Future<void>? switchToPage(int page) {
+    _controller!.animateToPage(
       page,
       duration: const Duration(milliseconds: 300),
       curve: Curves.ease,
@@ -82,8 +72,10 @@ class _CoolStepperState extends State<CoolStepper> {
     return widget.steps.length - 1 == index;
   }
 
-  onStepNext() {
-    String validation = widget.steps[currentStep].validation();
+  void onStepNext() {
+    final validation = widget.steps[currentStep].validation!();
+
+    /// [validation] is null, no validation rule
     if (validation == null) {
       if (!_isLast(currentStep)) {
         setState(() {
@@ -95,15 +87,30 @@ class _CoolStepperState extends State<CoolStepper> {
         widget.onCompleted();
       }
     } else {
-      // Show Error Snakbar
+      /// [showErrorSnackbar] is true, Show error snackbar rule
       if (widget.showErrorSnackbar) {
-        final snackBar = SnackBar(content: Text(validation ?? "Error!"));
-        Scaffold.of(context).showSnackBar(snackBar);
+        final flush = Flushbar(
+          message: validation,
+          flushbarStyle: FlushbarStyle.FLOATING,
+          margin: EdgeInsets.all(8.0),
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          icon: Icon(
+            Icons.info_outline,
+            size: 28.0,
+            color: Theme.of(context).primaryColor,
+          ),
+          duration: Duration(seconds: 2),
+          leftBarIndicatorColor: Theme.of(context).primaryColor,
+        );
+        flush.show(context);
+
+        // final snackBar = SnackBar(content: Text(validation));
+        // ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
   }
 
-  onStepBack() {
+  void onStepBack() {
     if (!_isFirst(currentStep)) {
       setState(() {
         currentStep--;
@@ -128,7 +135,7 @@ class _CoolStepperState extends State<CoolStepper> {
       ),
     );
 
-    final counter = widget.config.stepText == "" && widget.config.ofText == "" ? Container() : Container(
+    final counter = Container(
       child: Text(
         "${widget.config.stepText ?? 'STEP'} ${currentStep + 1} ${widget.config.ofText ?? 'OF'} ${widget.steps.length}",
         style: TextStyle(
@@ -143,7 +150,7 @@ class _CoolStepperState extends State<CoolStepper> {
         nextLabel = widget.config.finalText ?? 'FINISH';
       } else {
         if (widget.config.nextTextList != null) {
-          nextLabel = widget.config.nextTextList[currentStep];
+          nextLabel = widget.config.nextTextList![currentStep];
         } else {
           nextLabel = widget.config.nextText ?? 'NEXT';
         }
@@ -157,7 +164,7 @@ class _CoolStepperState extends State<CoolStepper> {
         backLabel = '';
       } else {
         if (widget.config.backTextList != null) {
-          backLabel = widget.config.backTextList[currentStep - 1];
+          backLabel = widget.config.backTextList![currentStep - 1];
         } else {
           backLabel = widget.config.backText ?? 'PREV';
         }
@@ -169,31 +176,20 @@ class _CoolStepperState extends State<CoolStepper> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          getPrevLabel() == "" ? Container() : Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: FlatButton(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-              color: _isFirst(currentStep) ? null : (widget.config.backBtnColor ?? Colors.grey),
-              onPressed: onStepBack,
-              child: Text(
-                getPrevLabel(),
-                style: TextStyle(color: Colors.black),
-              ),
+          TextButton(
+            onPressed: onStepBack,
+            child: Text(
+              getPrevLabel(),
+              style: TextStyle(color: Colors.grey),
             ),
           ),
-          _isLast(currentStep) ? Container() : counter,
-          _isLast(currentStep) ? Container() :
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: FlatButton(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-              color:  (widget.config.nextBtnColor ?? Colors.blueAccent),
-              onPressed: onStepNext,
-              child: Text(
-                getNextLabel(),
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+          counter,
+          TextButton(
+            onPressed: onStepNext,
+            child: Text(
+              getNextLabel(),
+              style: TextStyle(
+                color: Colors.green,
               ),
             ),
           ),
