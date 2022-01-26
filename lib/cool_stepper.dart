@@ -9,6 +9,7 @@ import 'package:cool_stepper/src/models/cool_step.dart';
 import 'package:cool_stepper/src/models/cool_stepper_config.dart';
 import 'package:cool_stepper/src/widgets/cool_stepper_view.dart';
 import 'package:flutter/material.dart';
+import 'package:recruitify/theme/theme.dart';
 
 /// CoolStepper
 class CoolStepper extends StatefulWidget {
@@ -135,7 +136,7 @@ class _CoolStepperState extends State<CoolStepper> {
       ),
     );
 
-    final counter = Container(
+    final counter = widget.config.stepText.isEmpty && widget.config.ofText.isEmpty ? Container() : Container(
       child: Text(
         "${widget.config.stepText ?? 'STEP'} ${currentStep + 1} ${widget.config.ofText ?? 'OF'} ${widget.steps.length}",
         style: TextStyle(
@@ -176,15 +177,19 @@ class _CoolStepperState extends State<CoolStepper> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          TextButton(
+          getPrevLabel() == "" ? Container() : TextButton(
             onPressed: onStepBack,
             child: Text(
               getPrevLabel(),
               style: TextStyle(color: Colors.grey),
             ),
           ),
-          counter,
-          TextButton(
+          _isLast(currentStep) ? Container() : counter,
+          _isLast(currentStep) ? Container() : TextButton(
+            style: TextButton.styleFrom(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              backgroundColor: Colors.blueAccent
+            ),
             onPressed: onStepNext,
             child: Text(
               getNextLabel(),

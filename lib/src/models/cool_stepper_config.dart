@@ -5,11 +5,13 @@ class CoolStepperConfig {
   ///
   /// default is 'BACK'
   final String? backText;
+  final Color? backBtnColor;
 
   /// The text that should be displayed for the next button
   ///
   /// default is 'NEXT'
   final String? nextText;
+  final Color? nextBtnColor;
 
   /// The text that describes the progress
   ///
@@ -57,7 +59,9 @@ class CoolStepperConfig {
 
   const CoolStepperConfig({
     this.backText = 'PRE',
+    this.backBtnColor,
     this.nextText = 'NEXT',
+    this.nextBtnColor,
     this.stepText = 'STEP',
     this.ofText = 'OF',
     this.headerColor,
