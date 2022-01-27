@@ -136,7 +136,9 @@ class _CoolStepperState extends State<CoolStepper> {
       ),
     );
 
-    final counter = widget.config.stepText.isEmpty && widget.config.ofText.isEmpty ? Container() : Container(
+    final counter = (widget.config.stepText != null &&  widget.config.stepText!.isEmpty) &&
+                    (widget.config.ofText != null && widget.config.ofText!.isEmpty)
+      ? Container() : Container(
       child: Text(
         "${widget.config.stepText ?? 'STEP'} ${currentStep + 1} ${widget.config.ofText ?? 'OF'} ${widget.steps.length}",
         style: TextStyle(
@@ -174,31 +176,38 @@ class _CoolStepperState extends State<CoolStepper> {
     }
 
     final buttons = Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          getPrevLabel() == "" ? Container() : TextButton(
-            onPressed: onStepBack,
-            child: Text(
-              getPrevLabel(),
-              style: TextStyle(color: Colors.grey),
-            ),
-          ),
-          _isLast(currentStep) ? Container() : counter,
-          _isLast(currentStep) ? Container() : TextButton(
-            style: TextButton.styleFrom(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-              backgroundColor: Colors.blueAccent
-            ),
-            onPressed: onStepNext,
-            child: Text(
-              getNextLabel(),
-              style: TextStyle(
-                color: Colors.green,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            getPrevLabel() == "" ? Container() : TextButton(
+              style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  backgroundColor: (widget.config.backBtnColor != null ? widget.config.backBtnColor : Colors.grey)
+              ),
+              onPressed: onStepBack,
+              child: Text(
+                getPrevLabel(),
+                style: TextStyle(color: Colors.white),
               ),
             ),
-          ),
-        ],
+            _isLast(currentStep) ? Container() : counter,
+            _isLast(currentStep) ? Container() : TextButton(
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                backgroundColor: (widget.config.nextBtnColor != null ? widget.config.nextBtnColor : ColorSets.primaryNavy)
+              ),
+              onPressed: onStepNext,
+              child: Text(
+                getNextLabel(),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
 
