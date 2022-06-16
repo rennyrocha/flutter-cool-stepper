@@ -196,7 +196,7 @@ class _CoolStepperState extends State<CoolStepper> {
             _isLast(currentStep) ? Container() : TextButton(
               style: TextButton.styleFrom(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                backgroundColor: (widget.config.nextBtnColor != null ? widget.config.nextBtnColor : ColorSets.primaryNavy)
+                backgroundColor: (widget.config.nextBtnColor != null ? widget.config.nextBtnColor : AppColor.primaryNavy)
               ),
               onPressed: onStepNext,
               child: Text(
